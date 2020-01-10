@@ -23,7 +23,7 @@ class HomeController extends Controller
      */
     public function index(Request $request)
     {
-        $request->user()->authorizeRoles(['admin','proveedor','vendedor','cliente',]);
+        $request->user()->authorizeRoles(['admin','utp','profesor','usuario',]);
         return view('home');
     }
 }

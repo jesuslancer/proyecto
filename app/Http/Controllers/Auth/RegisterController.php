@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\User;
 use App\Role;
 use App\RoleUser;
+use App\Persona;
+use App\Profesor;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -55,6 +57,11 @@ class RegisterController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'apellido_paterno' => ['required', 'string', 'min:3'],
+            'apellido_materno' => ['required', 'string', 'min:3'],
+            'telefono_contacto_1' => ['required', 'string', 'min:8'],
+            'fecha_nac' => ['required', 'string', 'min:8'],
+            'genero' => ['required', 'string', 'min:1', 'max:1'],
         ]);
     }
 
@@ -73,12 +80,36 @@ class RegisterController extends Controller
         ]);       
         $user->roles()->attach(Role::where('name', 'user')->first());       
         $this->create_role_user($user->id,$data['rol']);
+        $this->create_persona($user->id,$data);
         return $user;
     }
     public function create_role_user($id_u,$id_r){
         $rol_user = RoleUser::create([
             'role_id' => $id_r,
             'user_id' => $id_u,
+        ]);
+    }
+    //Se crea la persona a partir del usuario
+    public function create_persona($id_u, $data){
+        $persona = Persona::create([
+            'nombres' => $data['name'],
+            'apellido_paterno' => $data['apellido_paterno'],
+            'apellido_materno' => $data['apellido_materno'],
+            'email' => $data['email'],
+            'telefono_contacto_1' => $data['telefono_contacto_1'],
+            'fecha_nac' => $data['fecha_nac'],
+            'genero' => $data['genero'],
+            'user_id' => $id_u,
+        ]);
+        //Se crea el profesor a partir de la persona
+        if ($data['rol']==3) {
+            $this->create_profesor($persona->id);
+        }
+    }
+    //Se crea el profesor a partir de la persona
+    public function create_profesor($id){
+        $profesor = Profesor::create([
+                'persona_id'=>$id
         ]);
     }
 }

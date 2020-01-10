@@ -17,17 +17,17 @@ class RoleTableSeeder extends Seeder
         $role->save();        
 
         $role = new Role();
-        $role->name = 'proveedor';
-        $role->description = 'Proveedor de productos';
+        $role->name = 'utp';
+        $role->description = 'Cordinador de registros ';
         $role->save();
 
         $role = new Role();
-        $role->name = 'vendedor';
-        $role->description = 'Representante de ventas';
+        $role->name = 'profesor';
+        $role->description = 'Profesor';
         $role->save();
 
         $role = new Role();
-        $role->name = 'cliente';
+        $role->name = 'usuario';
         $role->description = 'Usuario';
         $role->save();
     }
